@@ -123,7 +123,7 @@ def main(params):
                     'loss_fn': CELoss(),
                     'weight': [1]} for task in task_name}
     
-    data_loader, _ = ovqa_dataloader(32, 2) # (32, 0)
+    data_loader, _ = ovqa_dataloader(32, 0) # (32, 0)
     train_dataloaders = {task: data_loader[task]['train'] for task in task_name}
     val_dataloaders = {task: data_loader[task]['val'] for task in task_name}
     test_dataloaders = {task: data_loader[task]['test'] for task in task_name}

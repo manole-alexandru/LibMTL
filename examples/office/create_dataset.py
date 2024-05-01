@@ -44,7 +44,7 @@ def office_dataloader(dataset, batchsize, root_path):
 #             print(d, mode, len(txt_dataset))
             data_loader[d][mode] = DataLoader(txt_dataset, 
                                               num_workers=2, 
-                                              pin_memory=True, 
+                                              pin_memory=False, 
                                               batch_size=batchsize, 
                                               shuffle=shuffle,
                                               drop_last=drop_last)
