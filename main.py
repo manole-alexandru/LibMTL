@@ -123,13 +123,14 @@ def main(params):
                     'loss_fn': CELoss(),
                     'weight': [1]} for task in task_name}
     
-    data_loader, _ = ovqa_dataloader(32, 2)
+    data_loader, _ = ovqa_dataloader(32, 2) # (32, 0)
     train_dataloaders = {task: data_loader[task]['train'] for task in task_name}
     val_dataloaders = {task: data_loader[task]['val'] for task in task_name}
     test_dataloaders = {task: data_loader[task]['test'] for task in task_name}
 
     # encoder = VQAClassifierModel(opt=opt)
-    decoders = nn.ModuleDict({task: nn.Linear(opt.MFB_OUT_DIM, class_no[task]) for task in list(task_dict.keys())})
+    decoders = nn.ModuleDict({task: nn.Sequential(nn.Linear(opt.MFB_OUT_DIM, class_no[task]),
+                                                  nn.Softmax(dim=1)) for task in list(task_dict.keys())})
 
     ovqa_model = Trainer(task_dict=task_dict, 
                           weighting=params.weighting, 

@@ -48,6 +48,9 @@ class CELoss(AbsLoss):
     def compute_loss(self, pred, gt):
         r"""
         """
+        #TODO: MOVE SQUEZE TO PREPROCESS
+        gt = gt.squeeze(1)
+        gt = gt.squeeze(1).float()
         loss = self.loss_fn(pred, gt)
         return loss
 

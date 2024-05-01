@@ -14,7 +14,7 @@ _parser.add_argument('--arch', type=str, default='HPS',
                     help='architecture for MTL, option: HPS, MTAN')
 _parser.add_argument('--rep_grad', action='store_true', default=False, 
                     help='computing gradient for representation or sharing parameters')
-_parser.add_argument('--multi_input', action='store_true', default=False, 
+_parser.add_argument('--multi_input', action='store_true', default=True, 
                     help='whether each task has its own input data')
 _parser.add_argument('--save_path', type=str, default=None, 
                     help='save path')

@@ -49,7 +49,8 @@ class AccMetric(AbsMetric):
     def update_fun(self, pred, gt):
         r"""
         """
-        pred = F.softmax(pred, dim=-1).max(-1)[1]
+        # TODO: Update code in order to restore AccMetric to OG
+        # pred = F.softmax(pred, dim=-1).max(-1)[1]
         self.record.append(gt.eq(pred).sum().item())
         self.bs.append(pred.size()[0])
         

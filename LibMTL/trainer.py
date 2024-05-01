@@ -147,7 +147,9 @@ class Trainer(nn.Module):
         except:
             loader[1] = iter(loader[0])
             data, label = next(loader[1])
-        data = data.to(self.device, non_blocking=True)
+        #TODO: COMPUTE EMBEDDINGS IN DATALOADER AND RESTORE OG CODE HERE
+        data[0] = data[0].to(self.device, non_blocking=True)
+        # data = data.to(self.device, non_blocking=True)
         if not self.multi_input:
             for task in self.task_name:
                 label[task] = label[task].to(self.device, non_blocking=True)
