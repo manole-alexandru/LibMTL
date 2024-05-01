@@ -11,7 +11,7 @@ from PIL import Image
 import torch.nn as nn
 import torch.optim as optim
 from torch.optim import lr_scheduler
-from LibMTL.examples.ovqa.vgg import VGG19
+from vgg import VGG19
 import torch.nn.functional as F
 from torch.optim import lr_scheduler
 from torch.optim.lr_scheduler import _LRScheduler

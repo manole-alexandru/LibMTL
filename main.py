@@ -21,7 +21,6 @@ def parse_args(parser):
     parser.add_argument('--dataset_path', default='/', type=str, help='dataset path')
     return parser.parse_args()
 
-
 def parse_opt():
     parser = argparse.ArgumentParser()
 
@@ -29,7 +28,7 @@ def parse_opt():
     parser.add_argument('--SEED', type=int, default=97)
     parser.add_argument('--BATCH_SIZE', type=int, default=64)
     parser.add_argument('--VAL_BATCH_SIZE', type=int, default=64)
-    parser.add_argument('--NUM_OUTPUT_UNITS', type=int, default=len(ANS_LABLE_DICT))
+    parser.add_argument('--NUM_OUTPUT_UNITS', type=int, default=1067)
     parser.add_argument('--MAX_QUESTION_LEN', type=int, default=17)
     parser.add_argument('--IMAGE_CHANNEL', type=int, default=1472)
     parser.add_argument('--INIT_LERARNING_RATE', type=float, default=1e-4)
@@ -48,6 +47,7 @@ def parse_opt():
     return args
 
 opt = parse_opt()
+
 
 class VQAClassifierModel(nn.Module):
     '''
