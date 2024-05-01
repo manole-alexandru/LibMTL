@@ -4,11 +4,11 @@ import torch.nn.functional as F
 import numpy as np
 
 from LibMTL.config import LibMTL_args, prepare_args
-from LibMTL.LibMTL.loss import CELoss
-from LibMTL.LibMTL.metrics import AccMetric
-from LibMTL.LibMTL.trainer import Trainer
-from LibMTL.examples.ovqa.create_dataset import ovqa_dataloader, ANS_LABLE_DICT, Q_TYPE_LABLE_DICT, ANS_TYPE_LABLE_DICT
-from LibMTL.examples.ovqa.model import BERTokenizer, BertQstEncoder, ImageFeatureExtractionAtt, QuestionFeatureExtractionAtt
+from LibMTL.loss import CELoss
+from LibMTL.metrics import AccMetric
+from LibMTL.trainer import Trainer
+from create_dataset import ovqa_dataloader, ANS_LABLE_DICT, Q_TYPE_LABLE_DICT, ANS_TYPE_LABLE_DICT
+from model import BERTokenizer, BertQstEncoder, ImageFeatureExtractionAtt, QuestionFeatureExtractionAtt
 
 from LibMTL.utils import set_random_seed, set_device
 
@@ -128,13 +128,13 @@ def main(params):
     val_dataloaders = {task: data_loader[task]['val'] for task in task_name}
     test_dataloaders = {task: data_loader[task]['test'] for task in task_name}
 
-    encoder = VQAClassifierModel(opt=opt)
+    # encoder = VQAClassifierModel(opt=opt)
     decoders = nn.ModuleDict({task: nn.Linear(opt.MFB_OUT_DIM, class_no[task]) for task in list(task_dict.keys())})
 
     ovqa_model = Trainer(task_dict=task_dict, 
                           weighting=params.weighting, 
                           architecture=params.arch, 
-                          encoder_class=encoder, 
+                          encoder_class=VQAClassifierModel, 
                           decoders=decoders,
                           rep_grad=params.rep_grad,
                           multi_input=params.multi_input,
