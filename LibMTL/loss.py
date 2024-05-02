@@ -49,6 +49,7 @@ class CELoss(AbsLoss):
         r"""
         """
         #TODO: MOVE SQUEZE TO PREPROCESS
+        pred = torch.nn.functional.one_hot(torch.argmax(pred, dim = 1), num_classes=pred.shape[1])
         gt = gt.squeeze(1)
         gt = gt.squeeze(1).float()
         loss = self.loss_fn(pred, gt)
