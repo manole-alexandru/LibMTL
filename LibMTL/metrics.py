@@ -54,7 +54,7 @@ class AccMetric(AbsMetric):
         pred = torch.nn.functional.one_hot(torch.argmax(pred, dim = 1), num_classes=pred.shape[1])
         gt = gt.squeeze(1)
         gt = gt.squeeze(1).float()
-        self.record.append(gt.eq(pred).sum().item())
+        self.record.append(gt.eq(pred).sum().item() / pred.shape[1])
         self.bs.append(pred.size()[0])
         
     def score_fun(self):
