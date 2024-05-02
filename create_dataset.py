@@ -163,7 +163,7 @@ def ovqa_dataloader(batch_size, num_workers, size=228):
             
             data_loader[d][phase] = DataLoader(ovqa_dataset, 
                                               num_workers=num_workers, 
-                                              pin_memory=True,  # Maybe False
+                                              pin_memory=False,  # Maybe False
                                               batch_size=batch_size, 
                                               shuffle=shuffle,
                                               drop_last=drop_last)
