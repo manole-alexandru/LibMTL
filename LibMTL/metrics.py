@@ -51,6 +51,9 @@ class AccMetric(AbsMetric):
         """
         # TODO: Update code in order to restore AccMetric to OG
         # pred = F.softmax(pred, dim=-1).max(-1)[1]
+        pred = torch.nn.functional.one_hot(torch.argmax(pred, dim = 1), num_classes=pred.shape[1])
+        gt = gt.squeeze(1)
+        gt = gt.squeeze(1).float()
         self.record.append(gt.eq(pred).sum().item())
         self.bs.append(pred.size()[0])
         
