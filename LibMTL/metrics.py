@@ -54,13 +54,17 @@ class AccMetric(AbsMetric):
         pred = torch.nn.functional.one_hot(torch.argmax(pred, dim = 1), num_classes=pred.shape[1])
         gt = gt.squeeze(1)
         gt = gt.squeeze(1).float()
-        self.record.append(gt.eq(pred).sum().item() / pred.shape[1])
+        pred_labels = torch.argmax(pred, dim=1)
+        gt_labels = torch.argmax(gt, dim=1)
+        accuracy = (pred_labels == gt_labels).float().mean().item()
+
+        self.record.append(accuracy)
         self.bs.append(pred.size()[0])
         
     def score_fun(self):
         r"""
         """
-        return [(sum(self.record)/sum(self.bs))]
+        return [sum(r * b for r, b in zip(self.record, self.bs)) / sum(self.bs)]
 
 
 # L1 Error
