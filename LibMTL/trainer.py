@@ -8,6 +8,11 @@ from LibMTL.utils import count_parameters
 import LibMTL.weighting as weighting_method
 import LibMTL.architecture as architecture_method
 
+def concat_generators(*args):
+      for gen in args:
+          yield from gen
+
+
 class Trainer(nn.Module):
     r'''A Multi-Task Learning Trainer.
 
@@ -136,10 +141,15 @@ class Trainer(nn.Module):
         optim_arg = {k: v for k, v in optim_param.items() if k != 'optim'}
         self.optimizer = optim_dict[optim_param['optim']](self.model.parameters(), **optim_arg)
         self.optimizers = []
-        for dec in decoders:
-            print(self.model)
-            task_params = self.model.parameters()
-            self.optimizers.append(optim_dict[optim_param['optim']](task_params, **optim_arg))
+        for id_dec, dec in enumerate(decoders):
+            encoder = self.model._modules['encoder']
+            decoder = self.model._modules['decoders']
+            # print(decoder)
+            # print(decoder.keys())
+            
+            decoder = list(decoder.items())[id_dec][1].parameters()
+            parameters = concat_generators(encoder.parameters(), decoder)
+            self.optimizers.append(optim_dict[optim_param['optim']](parameters, **optim_arg))
 
         if scheduler_param is not None:
             scheduler_arg = {k: v for k, v in scheduler_param.items() if k != 'scheduler'}
