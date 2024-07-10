@@ -144,8 +144,6 @@ class Trainer(nn.Module):
         for id_dec, dec in enumerate(decoders):
             encoder = self.model._modules['encoder']
             decoder = self.model._modules['decoders']
-            # print(decoder)
-            # print(decoder.keys())
             
             decoder = list(decoder.items())[id_dec][1].parameters()
             parameters = concat_generators(encoder.parameters(), decoder)
@@ -249,11 +247,22 @@ class Trainer(nn.Module):
                         train_losses[tn] = self._compute_loss(train_pred, train_gt, task)
                         self.meter.update(train_pred, train_gt, task)
 
-                self.optimizer.zero_grad(set_to_none=False)
-                w = self.model.backward(train_losses, **self.kwargs['weight_args'])
-                if w is not None:
-                    self.batch_weight[:, epoch, batch_index] = w
-                self.optimizer.step()
+                # self.optimizer.zero_grad(set_to_none=False)
+                # w = self.model.backward(train_losses, **self.kwargs['weight_args'])
+                # if w is not None:
+                #     self.batch_weight[:, epoch, batch_index] = w
+                # self.optimizer.step()
+                for tn, _ in enumerate(self.task_name):
+                  if tn == len(self.task_name) - 1:
+                      train_losses[tn].backward()  # Perform backward pass for the last task
+                  else:
+                      train_losses[tn].backward(retain_graph=True)  # Retain graph for all but the last task
+
+                # Update parameters and zero gradients for each task
+                for tn in range(len(self.task_name)):
+                    self.optimizers[tn].step()  # Update parameters
+                    self.optimizers[tn].zero_grad(set_to_none=False)
+
             
             self.meter.record_time('end')
             self.meter.get_score()
