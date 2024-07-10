@@ -92,7 +92,7 @@ class Trainer(nn.Module):
         self.load_path = load_path
 
         self._prepare_model(weighting, architecture, encoder_class, decoders)
-        self._prepare_optimizer(optim_param, scheduler_param)
+        self._prepare_optimizer(optim_param, scheduler_param, decoders)
         
         self.meter = _PerformanceMeter(self.task_dict, self.multi_input)
         
@@ -120,7 +120,7 @@ class Trainer(nn.Module):
             print('Load Model from - {}'.format(self.load_path))
         count_parameters(self.model)
         
-    def _prepare_optimizer(self, optim_param, scheduler_param):
+    def _prepare_optimizer(self, optim_param, scheduler_param, decoders=None):
         optim_dict = {
                 'sgd': torch.optim.SGD,
                 'adam': torch.optim.Adam,
@@ -135,6 +135,12 @@ class Trainer(nn.Module):
             }
         optim_arg = {k: v for k, v in optim_param.items() if k != 'optim'}
         self.optimizer = optim_dict[optim_param['optim']](self.model.parameters(), **optim_arg)
+        self.optimizers = []
+        for dec in decoders:
+            print(self.model)
+            task_params = self.model.parameters()
+            self.optimizers.append(optim_dict[optim_param['optim']](task_params, **optim_arg))
+
         if scheduler_param is not None:
             scheduler_arg = {k: v for k, v in scheduler_param.items() if k != 'scheduler'}
             self.scheduler = scheduler_dict[scheduler_param['scheduler']](self.optimizer, **scheduler_arg)
