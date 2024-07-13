@@ -247,18 +247,24 @@ class Trainer(nn.Module):
                         train_losses[tn] = self._compute_loss(train_pred, train_gt, task)
                         self.meter.update(train_pred, train_gt, task)
 
+                if epoch % 5 == 0:
+                    weights = [0, 1]
+                else:
+                    weights = [1, 0]
+                 
                 # self.optimizer.zero_grad(set_to_none=False)
                 # w = self.model.backward(train_losses, **self.kwargs['weight_args'])
                 # if w is not None:
                 #     self.batch_weight[:, epoch, batch_index] = w
                 # self.optimizer.step()
                 for tn, _ in enumerate(self.task_name):
+                  train_losses[tn] = train_losses[tn] * weights[tn]
                   if tn == len(self.task_name) - 1:
                       train_losses[tn].backward()  # Perform backward pass for the last task
                   else:
                       train_losses[tn].backward(retain_graph=True)  # Retain graph for all but the last task
 
-                # Update parameters and zero gradients for each task
+                # Update parameters and zero gradients for each task   
                 for tn in range(len(self.task_name)):
                     self.optimizers[tn].step()  # Update parameters
                     self.optimizers[tn].zero_grad(set_to_none=False)
